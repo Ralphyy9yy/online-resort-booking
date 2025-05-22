@@ -13,7 +13,7 @@ import Dashboard from "./components/Dashboard"; // Import the new Dashboard comp
 import ProtectedRoute from "./components/ProtectedRoute"; // Import the ProtectedRoute component
 import GuestInfoAndPolicy from "./pages/GuestInfoAndPolicy";
 import ResortReviewsPage from "./pages/ResortReviewsPage";  
-import InfoHotel from "./pages/Infohotel"; // Capital I and H
+import InfoHotel from "./pages/InfoHotel"; // Capital I and H
 
 import PaymentProcessing from "./components/PaymentProcessing";
 import Confirmation from "./components/Confirmation";
@@ -42,7 +42,7 @@ function App() {
           {/* Protected Route for Dashboard */}
           {/* Add more routes as needed */}
           {/* Protected Route for Dashboard */}
-          <Route path="/infohotel" element={<InfoHotel />} />
+          <Route path="/infoHotel" element={<InfoHotel />} />
 
           <Route
           path="/dashboard"
