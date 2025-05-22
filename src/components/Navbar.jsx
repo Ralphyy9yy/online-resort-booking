@@ -85,7 +85,7 @@ const Navbar = () => {
         flex items-center gap-2
       "
     >
-      {/* Optional: Add an icon */}
+    
     
       Login
     </Link>
