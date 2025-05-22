@@ -34,7 +34,7 @@ const Navbar = () => {
       </Link>
 
       {/* Desktop Navigation */}
-      <ul className="hidden md:flex space-x-25 text-gray-700 font-medium mr-110">
+      <ul className="hidden md:flex space-x-25 text-gray-700 font-medium mr-50%">
         <li className="hover:text-green-600 cursor-pointer border-b-2 border-transparent hover:border-green-600">
           <Link
             to="/"
@@ -67,7 +67,30 @@ const Navbar = () => {
             Contact Us
           </Link>
         </li>
+  
       </ul>
+    <ul className="hidden md:flex space-x-4 text-gray-900 font-bold">
+  <li>
+    <Link
+      to="/login"
+      className="
+        bg-green-700
+        text-white px-6 py-2 rounded-lg
+        font-semibold shadow
+        hover:from-white-600 hover:to-green-800
+        hover:shadow-lg hover:scale-105
+        focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2
+        active:scale-99
+        transition-all duration-200
+        flex items-center gap-2
+      "
+    >
+      {/* Optional: Add an icon */}
+    
+      Login
+    </Link>
+  </li>
+</ul>
 
       {/* Mobile Menu Button */}
       <button className="md:hidden text-2xl" onClick={() => setMenuOpen(!menuOpen)}>
