@@ -1,9 +1,12 @@
 import { Router } from 'express';
 import mysql from 'mysql2/promise';
 import cors from 'cors';
-
+import path from 'path';
+import { fileURLToPath } from 'url';
 const router = Router();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const dbConfig = {
   host: 'localhost',
   user: 'root',
@@ -38,20 +41,24 @@ function validateRoomFields({ room_type_id, price, capacity, available_rooms }) 
   return true;
 }
 
+
+
 // GET /api/rooms - return leftRoom as available_rooms in response
 router.get('/rooms', async (req, res) => {
   try {
     const [rows] = await pool.query(`
-      SELECT r.room_id, r.room_type_id, rt.room_type_name, r.price, r.capacity, r.leftRoom
+      SELECT r.room_id, r.room_type_id, rt.room_type_name, r.price, r.capacity, r.leftRoom, r.room_image
       FROM rooms r
       JOIN roomtypes rt ON r.room_type_id = rt.room_type_id
       ORDER BY r.room_id
     `);
 
-    // Map leftRoom to available_rooms and omit leftRoom from response
-    const mappedRows = rows.map(({ leftRoom, ...rest }) => ({
-      ...rest,
-      available_rooms: leftRoom,
+    const mappedRows = rows.map(room => ({
+      ...room,
+      available_rooms: room.leftRoom,
+      room_image_url: room.room_image
+        ? `${req.protocol}://${req.get('host')}/api/rooms/image/${room.room_image}`
+        : null,
     }));
 
     res.json(mappedRows);
@@ -60,6 +67,27 @@ router.get('/rooms', async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch rooms' });
   }
 });
+
+
+
+router.get('/rooms/image/:filename', (req, res) => {
+  const { filename } = req.params;
+
+  // Sanitize filename to prevent directory traversal attacks
+  if (!filename || filename.includes('..') || filename.includes('/')) {
+    return res.status(400).send('Invalid filename');
+  }
+
+  const imagePath = path.join(__dirname, '../uploads/room_images', filename);
+
+  res.sendFile(imagePath, (err) => {
+    if (err) {
+      console.error('Error sending image file:', err);
+      res.status(404).send('Image not found');
+    }
+  });
+});
+
 
 // POST /api/rooms - map available_rooms to leftRoom for insert
 router.post('/rooms', async (req, res) => {

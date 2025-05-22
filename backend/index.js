@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import path from 'path';
+import { fileURLToPath } from 'url';
 dotenv.config();
 import contactRoutes from './routes/contact.js';
 import bookingRoutes from './routes/booking.js';
@@ -16,6 +17,10 @@ import roomtypes from './routes/roomRoutes.js';
 import reportRoutes from './routes/reports.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 // Create MySQL connection
 const db = mysql.createConnection({
@@ -38,7 +43,7 @@ app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(express.json()); // to parse the body of incoming requests
 
 // Serve static files (images) from the 'src/assets' folder
-app.use('/assets', express.static(path.resolve('src/assets')));
+
 
 // JWT Generator
 const generateJwtToken = (user) => {
@@ -127,6 +132,7 @@ app.get('/api/rooms', (req, res) => {
       r.price,
       r.capacity,
       r.leftRoom AS available_rooms,
+      r.room_image,
       rt.description
     FROM 
       rooms r
@@ -263,6 +269,7 @@ app.get('/api/booking-statuses', (req, res) => {
   });
 });
   
+app.use('/uploads/room_images', express.static(path.join(__dirname, 'uploads/room_images')));
 {/*Contact Us Route*/}
 app.use('/api/contact', contactRoutes);
 app.use('/api/bookings', bookingRoutes);

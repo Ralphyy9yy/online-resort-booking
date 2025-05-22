@@ -5,14 +5,11 @@ import { MdOutlineCalendarToday, MdAir } from "react-icons/md";
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import booking from "../assets/booking.jpg";
-import junior from "../assets/junior.jpg";
-import standard from "../assets/standard.jpg";
-import superior from "../assets/SuperiorSuite/superiorBG.jpg";
 
 const BookingPage = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
- 
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [roomData, setRoomData] = useState([]);
@@ -20,16 +17,6 @@ const BookingPage = () => {
   const [loading, setLoading] = useState(true);
   const [isHotelInfoModalOpen] = useState(false);
   const navigate = useNavigate();
-
-  // Define room images mapping
-  const roomImageMap = {
-    // Map by room type name
-    Junior: junior,
-    Standard: standard,
-    Superior: superior,
-    // Fallback images if needed
-    default: booking,
-  };
 
   useEffect(() => {
     const today = new Date();
@@ -67,25 +54,26 @@ const BookingPage = () => {
     minDate.setDate(minDate.getDate() + 1);
     return minDate.toISOString().split("T")[0];
   };
-  
+
   const handleCheckInChange = (e) => {
     const newCheckIn = e.target.value;
     setCheckIn(newCheckIn);
-  
+
     // If check-out is before or equal to new check-in, reset check-out to the minimum allowed
     if (checkOut && new Date(checkOut) <= new Date(newCheckIn)) {
       setCheckOut(getMinCheckOutDate());
     }
   };
-  
 
   // Function to get image path based on room type
-  const getImagePath = (room) => {
-    if (roomImageMap[room.name]) {
-      return roomImageMap[room.name];
-    }
-    return roomImageMap.default;
-  };
+ const getImagePath = (room) => {
+  if (room && room.room_image) {
+    return `http://localhost:5000/api/rooms/image/${room.room_image}`;
+  }
+  // Fallback to a local default image in your public folder
+  return "/default-image.jpg";
+};
+
 
   const handleAddRoom = (room) => {
     const exists = selectedRooms.find((r) => r.room_id === room.room_id);
@@ -119,8 +107,6 @@ const BookingPage = () => {
       alert("Please select at least one room to book");
       return;
     }
-
-    
 
     const bookingData = {
       checkIn,
@@ -216,9 +202,6 @@ const BookingPage = () => {
     },
   };
 
- 
-
-
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Navbar */}
@@ -293,12 +276,7 @@ const BookingPage = () => {
             </Link>
           </li>
           <li>
-            <Link
-              to="/infohotel"
-              
-            >
-              Hotel Info
-            </Link>
+            <Link to="/infohotel">Hotel Info</Link>
           </li>
           <li>
             <Link to="/login" className="hover:text-green-300">
@@ -357,48 +335,47 @@ const BookingPage = () => {
         initial="hidden"
         animate="visible"
       >
-       <div className="flex flex-wrap justify-between gap-9">
-  <motion.div
-    className="flex-1 min-w-[200px]"
-    whileHover={{ scale: 1.02 }}
-    transition={{ type: "spring", stiffness: 300 }}
-  >
-    <label className="block text-sm font-medium text-gray-700 mb-1">
-      Check In
-    </label>
-    <div className="flex items-center border rounded px-3 py-2">
-      <MdOutlineCalendarToday className="mr-2 text-gray-500" />
-      <input
-        type="date"
-        value={checkIn}
-        onChange={handleCheckInChange}
-        className="outline-none w-full"
-        min={new Date().toISOString().split("T")[0]} // No past dates
-      />
-    </div>
-  </motion.div>
+        <div className="flex flex-wrap justify-between gap-9">
+          <motion.div
+            className="flex-1 min-w-[200px]"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Check In
+            </label>
+            <div className="flex items-center border rounded px-3 py-2">
+              <MdOutlineCalendarToday className="mr-2 text-gray-500" />
+              <input
+                type="date"
+                value={checkIn}
+                onChange={handleCheckInChange}
+                className="outline-none w-full"
+                min={new Date().toISOString().split("T")[0]} // No past dates
+              />
+            </div>
+          </motion.div>
 
-  <motion.div
-    className="flex-1 min-w-[200px]"
-    whileHover={{ scale: 1.02 }}
-    transition={{ type: "spring", stiffness: 300 }}
-  >
-    <label className="block text-sm font-medium text-gray-700 mb-1">
-      Check Out
-    </label>
-    <div className="flex items-center border rounded px-3 py-2">
-      <MdOutlineCalendarToday className="mr-2 text-gray-500" />
-      <input
-        type="date"
-        value={checkOut}
-        onChange={(e) => setCheckOut(e.target.value)}
-        className="outline-none w-full"
-        min={getMinCheckOutDate()} // Must be after check-in
-      />
-    </div>
-  </motion.div>
-</div>
-
+          <motion.div
+            className="flex-1 min-w-[200px]"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Check Out
+            </label>
+            <div className="flex items-center border rounded px-3 py-2">
+              <MdOutlineCalendarToday className="mr-2 text-gray-500" />
+              <input
+                type="date"
+                value={checkOut}
+                onChange={(e) => setCheckOut(e.target.value)}
+                className="outline-none w-full"
+                min={getMinCheckOutDate()} // Must be after check-in
+              />
+            </div>
+          </motion.div>
+        </div>
       </motion.div>
 
       {/* Room Display Section with View Toggle */}
@@ -502,16 +479,14 @@ const BookingPage = () => {
                     >
                       <div className="relative">
                         <img
-                          src={room.image}
-                          alt={room.name}
-                          className="w-full h-48 object-cover rounded-t-lg"
+                          src={getImagePath(room)}
+                          alt={room.room_type_name || "Room Image"}
                           onError={(e) => {
-                            console.error(
-                              `Failed to load image for ${room.name}`
-                            );
-                            e.target.src = roomImageMap.default;
+                            e.target.onerror = null;
+                            e.target.src = "/default-image.jpg";
                           }}
                         />
+
                         {room.promo && (
                           <motion.span
                             className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded"
@@ -940,7 +915,6 @@ const BookingPage = () => {
                 </motion.div>
               )}
             </div>
-       
           </motion.div>
 
           <motion.div
@@ -1045,7 +1019,6 @@ const BookingPage = () => {
               </div>
             </div>
           </motion.div>
-          
         </div>
       </motion.div>
 
