@@ -5,6 +5,7 @@ import { MdOutlineCalendarToday, MdAir } from "react-icons/md";
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import booking from "../assets/booking.jpg";
+import InfoHotel from "./InfoHotel";
 
 const BookingPage = () => {
   const [checkIn, setCheckIn] = useState("");
@@ -15,7 +16,7 @@ const BookingPage = () => {
   const [roomData, setRoomData] = useState([]);
   const [viewMode, setViewMode] = useState("grid"); // grid or list view
   const [loading, setLoading] = useState(true);
-  const [isHotelInfoModalOpen] = useState(false);
+  const [isHotelInfoModalOpen, setHotelInfoModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,14 +67,13 @@ const BookingPage = () => {
   };
 
   // Function to get image path based on room type
- const getImagePath = (room) => {
-  if (room && room.room_image) {
-    return `http://localhost:5000/api/rooms/image/${room.room_image}`;
-  }
-  // Fallback to a local default image in your public folder
-  return "/default-image.jpg";
-};
-
+  const getImagePath = (room) => {
+    if (room && room.room_image) {
+      return `http://localhost:5000/api/rooms/image/${room.room_image}`;
+    }
+    // Fallback to a local default image in your public folder
+    return "/default-image.jpg";
+  };
 
   const handleAddRoom = (room) => {
     const exists = selectedRooms.find((r) => r.room_id === room.room_id);
@@ -205,6 +205,7 @@ const BookingPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Navbar */}
+
       <motion.nav
         className="bg-green-800 text-white px-6 py-4 flex justify-between items-center relative"
         initial={{ y: -50 }}
@@ -247,13 +248,17 @@ const BookingPage = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/infohotel" className="hover:text-green-300">
+                <button
+                  onClick={() => setHotelInfoModalOpen(true)}
+                  className="hover:text-green-300 bg-transparent border-none cursor-pointer p-0"
+                  type="button"
+                >
                   Hotel Info
-                </Link>
+                </button>
               </li>
               <li>
-                <Link to="/login" className="hover:text-green-300">
-                  Login
+                <Link to = "/login" className="hover:text-green-300">
+                Login
                 </Link>
               </li>
               <li>
@@ -276,7 +281,13 @@ const BookingPage = () => {
             </Link>
           </li>
           <li>
-            <Link to="/infohotel">Hotel Info</Link>
+            <button
+              onClick={() => setHotelInfoModalOpen(true)}
+              className="hover:text-green-300 bg-transparent border-none outline-none cursor-pointer"
+              type="button"
+            >
+              Hotel Info
+            </button>
           </li>
           <li>
             <Link to="/login" className="hover:text-green-300">
@@ -295,7 +306,10 @@ const BookingPage = () => {
           </li>
         </ul>
       </motion.nav>
-
+ <InfoHotel
+      isOpen={isHotelInfoModalOpen}
+      onClose={() => setHotelInfoModalOpen(false)}
+    />
       {/* Hero Section */}
       <div
         className="relative bg-cover bg-center h-[300px]"
@@ -325,7 +339,7 @@ const BookingPage = () => {
             Find the ideal room for your needs
           </motion.p>
         </motion.div>
-        {isHotelInfoModalOpen && <HotelInfoModal />}
+       
       </div>
 
       {/* Booking Form */}
