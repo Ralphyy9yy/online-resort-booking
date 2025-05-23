@@ -262,29 +262,35 @@ export default function Home() {
       </section>
 
       {/* Full-Width Background Section with Parallax */}
-      <motion.div 
-        className="relative min-h-[60vh] w-full bg-cover bg-center bg-fixed bg-no-repeat flex items-center justify-center"
-        style={{ backgroundImage: `url(${bg})` }}
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1 }}
-      >
-        <div className="absolute inset-0  bg-opacity-40"></div>
-        <div className="relative z-10 text-center text-white px-6 max-w-4xl">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Experience Paradise</h2>
-          <p className="text-xl mb-8">Where luxury meets natural beauty</p>
-          <motion.a
-            href="/booking"
-            className="inline-flex items-center bg-white text-gray-900 font-bold py-3 px-6 rounded-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="mr-2">CHECK AVAILABILITY</span>
-            <span>→</span>
-          </motion.a>
-        </div>
-      </motion.div>
+    <motion.div
+  className="
+    relative min-h-[60vh] w-full bg-cover bg-center bg-no-repeat flex items-center justify-center
+    bg-fixed md:bg-fixed sm:bg-scroll
+  "
+  style={{ backgroundImage: `url(${bg})` }}
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: true }}
+  transition={{ duration: 1 }}
+>
+  {/* Overlay with opacity */}
+  <div className="absolute inset-0 bg-opacity-40"></div>
+
+  <div className="relative z-10 text-center text-white px-6 max-w-4xl">
+    <h2 className="text-4xl md:text-5xl font-bold mb-4">Experience Paradise</h2>
+    <p className="text-xl mb-8">Where luxury meets natural beauty</p>
+    <motion.a
+      href="/booking"
+      className="inline-flex items-center bg-white text-gray-900 font-bold py-3 px-6 rounded-lg"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <span className="mr-2">CHECK AVAILABILITY</span>
+      <span>→</span>
+    </motion.a>
+  </div>
+</motion.div>
+
 
       {/* Facilities Section with Improved Grid */}
       <section className="py-20 bg-white">
