@@ -274,7 +274,7 @@ export default function Home() {
   transition={{ duration: 1 }}
 >
   {/* Overlay with opacity */}
-  <div className="absolute inset-0 bg-opacity-40"></div>
+  <div className="absolute inset-0 "></div>
 
   <div className="relative z-10 text-center text-white px-6 max-w-4xl">
     <h2 className="text-4xl md:text-5xl font-bold mb-4">Experience Paradise</h2>
