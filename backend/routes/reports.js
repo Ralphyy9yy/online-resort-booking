@@ -48,6 +48,18 @@ router.get("/summary", async (req, res) => {
       ORDER BY month
     `);
 
+    const [frequentlyBookedRooms] = await connection.execute(`
+      SELECT 
+        rt.room_type_name AS room_name,
+        SUM(br.quantity) AS count
+      FROM booking_rooms br
+      JOIN rooms r ON br.room_id = r.room_id
+      JOIN roomtypes rt ON r.room_type_id = rt.room_type_id
+      GROUP BY rt.room_type_name
+      ORDER BY count DESC
+      LIMIT 5
+    `);
+
     await connection.end();
 
     res.json({
@@ -55,6 +67,7 @@ router.get("/summary", async (req, res) => {
       total_revenue,
       bookings_by_status: bookingsByStatus,
       bookings_per_month: bookingsPerMonth,
+      frequently_booked_rooms: frequentlyBookedRooms,
     });
   } catch (error) {
     if (connection) await connection.end();
