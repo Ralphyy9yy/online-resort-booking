@@ -80,16 +80,7 @@ export default function Home() {
       </div>
 
       {/* Feature Details */}
-      <motion.div
-        className="absolute bottom-65 left-5 md:left-20 text-black flex flex-col gap-4 p-4 rounded-lg backdrop-blur-sm bg-white bg-opacity-10 shadow-lg"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-      >
-   
-
-      
-      </motion.div>
+  
 
       {/* Features Section */}
       <div className="flex flex-col md:flex-row items-center justify-center bg-white p-6 md:p-12 w-full space-y-8 md:space-y-0">
