@@ -86,15 +86,8 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
       >
-        <div className="flex items-center gap-3">
-          <FaHome className="text-3xl text-blue-400" />
-          <p className="text-lg font-semibold">Spacious 140 sqm Suite</p>
-        </div>
+        
 
-        <div className="flex items-center gap-3">
-          <FaBed className="text-3xl text-green-400" />
-          <p className="text-lg font-semibold">Luxury King-Size Bed & Private Bedroom</p>
-        </div>
       </motion.div>
 
       {/* Features Section */}
