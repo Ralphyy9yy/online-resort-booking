@@ -218,6 +218,9 @@ ORDER BY b.booking_date DESC;
     if (connection) await connection.end();
   }
 });
+
+
+
 router.post('/logout', (req, res) => {
   // If you use sessions:
   if (req.session) {

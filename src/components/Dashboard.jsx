@@ -1144,7 +1144,7 @@ const ReportsContent = () => {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  
   useEffect(() => {
     const fetchReport = async () => {
       setLoading(true);
@@ -1153,7 +1153,7 @@ const ReportsContent = () => {
         const res = await axios.get("http://localhost:5000/api/reports/summary");
         setReport(res.data);
       } catch (err) {
-        setError("Failed to load report.");
+        setError("Failed to load report. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -1161,8 +1161,22 @@ const ReportsContent = () => {
     fetchReport();
   }, []);
 
-  if (loading) return <p>Loading report...</p>;
-  if (error) return <p className="text-red-600">{error}</p>;
+ 
+  
+  if (loading)
+    return (
+      <div className="flex justify-center items-center py-20">
+        <p className="text-gray-600 text-lg">Loading report...</p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex justify-center items-center py-20">
+        <p className="text-red-600 text-lg font-semibold">{error}</p>
+      </div>
+    );
+
   if (!report) return null;
 
   // Prepare data for Pie Chart (Bookings by Status)
@@ -1172,26 +1186,38 @@ const ReportsContent = () => {
   }));
 
   // Prepare colors for Pie Chart cells
-  const pieColors = pieData.map(d => statusColors[d.name.toLowerCase()] || "#8884d8");
+  const pieColors = pieData.map(
+    (d) => statusColors[d.name.toLowerCase()] || "#8884d8"
+  );
+
+  // Prepare data for Frequently Booked Rooms
+  const roomData = report.frequently_booked_rooms || [];
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h2 className="text-2xl font-bold mb-4">Reports & Analytics</h2>
+    <div className="bg-white p-8 rounded-lg shadow-lg max-w-7xl mx-auto">
+      <h2 className="text-3xl font-extrabold mb-8 text-gray-900">
+        Reports & Analytics
+      </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="bg-blue-100 p-4 rounded shadow text-center">
-          <h3 className="text-gray-700 mb-2">Total Bookings</h3>
-          <p className="text-3xl font-bold">{report.total_bookings}</p>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+        <div className="bg-green-50 p-6 rounded-lg shadow flex flex-col items-center">
+          <h3 className="text-lg font-semibold text-green-700 mb-2">Total Bookings</h3>
+          <p className="text-4xl font-extrabold text-green-900">
+            {report.total_bookings.toLocaleString()}
+          </p>
         </div>
-        <div className="bg-purple-100 p-4 rounded shadow text-center">
-          <h3 className="text-gray-700 mb-2">Total Revenue</h3>
-          <p className="text-3xl font-bold">
+        <div className="bg-purple-50 p-6 rounded-lg shadow flex flex-col items-center">
+          <h3 className="text-lg font-semibold text-purple-700 mb-2">Total Revenue</h3>
+          <p className="text-4xl font-extrabold text-purple-900">
             ₱{Number(report.total_revenue || 0).toLocaleString()}
           </p>
         </div>
-        <div className="bg-gray-100 p-4 rounded shadow">
-          <h3 className="text-gray-700 mb-2">Bookings by Status</h3>
-          <ResponsiveContainer width="100%" height={250}>
+        <div className="bg-gray-50 p-6 rounded-lg shadow">
+          <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">
+            Bookings by Status
+          </h3>
+          <ResponsiveContainer width="100%" height={260}>
             <PieChart>
               <Pie
                 data={pieData}
@@ -1199,40 +1225,154 @@ const ReportsContent = () => {
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                outerRadius={80}
-                label
+                outerRadius={90}
+                label={({ name, percent }) =>
+                  `${name}: ${(percent * 100).toFixed(0)}%`
+                }
+                labelLine={false}
               >
                 {pieData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={pieColors[index]} />
                 ))}
               </Pie>
-              <Tooltip />
-              <Legend verticalAlign="bottom" height={36} />
+              <Tooltip
+                formatter={(value) => [value, "Bookings"]}
+                contentStyle={{ fontSize: "14px" }}
+              />
+              <Legend
+                verticalAlign="bottom"
+                height={36}
+                iconType="circle"
+                wrapperStyle={{ fontSize: "14px" }}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      <h3 className="text-lg font-semibold mt-6 mb-2">Bookings per Month (Last 12 Months)</h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart
-          data={report.bookings_per_month}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
-          <YAxis yAxisId="left" label={{ value: 'Bookings', angle: -90, position: 'insideLeft' }} />
-          <YAxis yAxisId="right" orientation="right" label={{ value: 'Revenue (₱)', angle: 90, position: 'insideRight' }} />
-          <Tooltip />
-          <Legend />
-          <Bar yAxisId="left" dataKey="count" fill="#3b82f6" name="Bookings" />
-          <Bar yAxisId="right" dataKey="revenue" fill="#9333ea" name="Revenue" />
-        </BarChart>
-      </ResponsiveContainer>
+      {/* Bookings per Month */}
+      <section>
+        <h3 className="text-2xl font-semibold mb-6 text-gray-900">
+          Bookings per Month (Last 12 Months)
+        </h3>
+        <ResponsiveContainer width="100%" height={350}>
+          <BarChart
+            data={report.bookings_per_month}
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <XAxis
+              dataKey="month"
+              tick={{ fill: "#6b7280", fontSize: 14 }}
+              tickLine={false}
+            />
+            <YAxis
+              yAxisId="left"
+              label={{
+                value: "Bookings",
+                angle: -90,
+                position: "insideLeft",
+                fill: "#374151",
+                fontSize: 14,
+              }}
+              tick={{ fill: "#6b7280", fontSize: 14 }}
+              tickLine={false}
+            />
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              label={{
+                value: "Revenue (₱)",
+                angle: 90,
+                position: "insideRight",
+                fill: "#374151",
+                fontSize: 14,
+              }}
+              tick={{ fill: "#6b7280", fontSize: 14 }}
+              tickLine={false}
+            />
+            <Tooltip
+              formatter={(value, name) => {
+                if (name === "Revenue") {
+                  return `₱${Number(value).toLocaleString()}`;
+                }
+                return value;
+              }}
+              contentStyle={{ fontSize: "14px" }}
+            />
+            <Legend
+              wrapperStyle={{ fontSize: "14px" }}
+              verticalAlign="top"
+              height={36}
+            />
+            <Bar
+              yAxisId="left"
+              dataKey="count"
+              fill="#3b82f6"
+              name="Bookings"
+              radius={[5, 5, 0, 0]}
+              barSize={18}
+            />
+            <Bar
+              yAxisId="right"
+              dataKey="revenue"
+              fill="#9333ea"
+              name="Revenue"
+              radius={[5, 5, 0, 0]}
+              barSize={18}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </section>
+
+      {/* Frequently Booked Rooms */}
+      <section className="mt-12">
+        <h3 className="text-2xl font-semibold mb-4 text-gray-900">
+          Frequently Booked Rooms
+        </h3>
+        {roomData.length === 0 ? (
+          <p className="text-gray-500">No data available.</p>
+        ) : (
+          <>
+            {/* Table */}
+            <div className="overflow-x-auto mb-6">
+              <table className="min-w-full bg-white border rounded-lg">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2 border-b text-left text-gray-700 font-semibold">Room Name</th>
+                    <th className="px-4 py-2 border-b text-right text-gray-700 font-semibold">Bookings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {roomData.map((room, idx) => (
+                    <tr key={room.room_name} className={idx % 2 === 0 ? "bg-gray-50" : ""}>
+                      <td className="px-4 py-2 border-b">{room.room_name}</td>
+                      <td className="px-4 py-2 border-b text-right font-bold">{room.count}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* Horizontal Bar Chart */}
+            <ResponsiveContainer width="100%" height={Math.max(200, roomData.length * 40)}>
+              <BarChart
+                data={roomData}
+                layout="vertical"
+                margin={{ top: 10, right: 30, left: 50, bottom: 10 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" allowDecimals={false} />
+                <YAxis type="category" dataKey="room_name" width={150} />
+                <Tooltip />
+                <Bar dataKey="count" fill="#22c55e" name="Bookings" barSize={24} radius={[0, 8, 8, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </>
+        )}
+      </section>
     </div>
   );
 };
-
   const handleSidebarItemClick = (id) => {
     setActivePage(id);
   };
