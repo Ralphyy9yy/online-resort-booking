@@ -81,7 +81,7 @@ export default function Home() {
 
       {/* Feature Details */}
       <motion.div
-        className="absolute bottom-70 left-5 md:left-20 text-black flex flex-col gap-4 p-4 rounded-lg backdrop-blur-sm bg-white bg-opacity-10 shadow-lg"
+        className="absolute bottom-65 left-5 md:left-20 text-black flex flex-col gap-4 p-4 rounded-lg backdrop-blur-sm bg-white bg-opacity-10 shadow-lg"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
