@@ -12,8 +12,7 @@ import image4 from "../assets/image4.jpg";
 import image5 from "../assets/image5.jpg";
 import image6 from "../assets/image6.jpg";
 import display2 from "../assets/display2.jpg";
-import title from "../assets/title.png";
-import welcome from "../assets/welcome.png";
+
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);

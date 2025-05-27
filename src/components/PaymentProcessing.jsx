@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import gcashLogo from '../assets/gcash.png'; // Import the GCash logo
-
+import cashLogo from '../assets/cash.png'; //Import the cash logo
 const PaymentProcessing = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -122,7 +122,7 @@ const PaymentProcessing = () => {
             disabled={loading}
             aria-pressed={paymentMethod === 'gcash'}
             className={`flex-1 py-3 rounded border ${
-              paymentMethod === 'gcash' ? 'border-green-600 bg-green-100' : 'border-gray-300'
+              paymentMethod === 'gcash' ? 'border-blue-600 bg-blue-100' : 'border-gray-300'
             } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <img
@@ -148,6 +148,25 @@ const PaymentProcessing = () => {
             />
             <span className="block mt-2 text-center font-medium">PayPal</span>
           </button>
+
+          <button 
+          onClick={() => handlePaymentSelect('Cash')}
+          disabled ={loading}
+          aria-pressed={paymentMethod === 'Cash'}
+          className = {`flex-1 py-3 rounded border ${
+            paymentMethod === 'Cash' ? 'border-blue-600 bg-blue-100' : 'border-gray-300'
+          } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+            <img 
+            src = {cashLogo}
+            alt = "Cash"
+            className = "mx-auto h-10 object-contain">
+
+            </img>
+            <span className = "block mt-2 text center font-medium">Cash</span>
+
+
+          </button>
+          
         </div>
       </div>
 
