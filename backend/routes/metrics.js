@@ -265,7 +265,7 @@ router.put('/bookings/:id', async (req, res) => {
   const bookingId = req.params.id;
   const { status } = req.body;
 
-  if (!['confirmed', 'cancelled', 'pending'].includes(status)) {
+  if (!['confirmed', 'cancelled', 'pending', 'completed'].includes(status)) {
     return res.status(400).json({ error: 'Invalid status value' });
   }
 
