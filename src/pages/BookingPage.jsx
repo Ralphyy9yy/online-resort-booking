@@ -693,7 +693,7 @@ const BookingPage = () => {
                             ))}
                           </div>
 
-                          <p className="text-gray-600 mt-3 text-sm">
+                          <p className="text-gray-600 mt-3 text-sm font-semibold">
                             {room.description ||
                               `Experience comfort and luxury in our spacious ${
                                 room.name
