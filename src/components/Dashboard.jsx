@@ -300,26 +300,26 @@ const RoomsContent = () => {
         <tbody>
           {rooms.map((room) => (
             <tr key={room.room_id} className="hover:bg-gray-50">
-              <td className="p-3 border">{room.room_id}</td>
-              <td className="p-3 border">{room.name || "N/A"}</td>
-              <td className="p-3 border">
+              <td className="p-3 border text-center font-medium">{room.room_id}</td>
+              <td className="p-3 border text-center font-medium">{room.name || "N/A"}</td>
+              <td className="p-3 border text-center font-medium">
                 ₱
                 {Number(room.price).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                 })}
               </td>
-              <td className="p-3 border">{room.capacity}</td>
-              <td className="p-3 border">{room.available_rooms}</td>
+              <td className="p-3 border text-center font-medium">{room.capacity}</td>
+              <td className="p-3 border text-center font-medium">{room.available_rooms}</td>
               <td className="p-3 border text-center space-x-2">
-                <button
+                <button 
                   onClick={() => openEditModal(room)}
-                  className="text-blue-600 hover:underline"
+                  className="text-blue-600 font-medium bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => openDeleteModal(room)}
-                  className="text-red-600 hover:underline"
+                  className="text-red-600 font-medium bg-red-100 hover:bg-red-200 px-3 py-1 rounded"
                 >
                   Delete
                 </button>
@@ -651,6 +651,15 @@ const BookingsContent = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+
+        <div className="flex gap-2 flex-wrap items-center ml-110">
+          <img src = "src\assets\archive.jpg"
+          
+            alt="Archive Icon"
+            className="w-8 h-8 cursor-pointer">
+          
+          </img>
+            </div>
         <div className="flex gap-2 flex-wrap">
           <input
             type="date"
@@ -726,8 +735,11 @@ const BookingsContent = () => {
                         onChange={(e) => setStatusDraft(e.target.value)}
                         autoFocus
                       >
+
+                         <option value="pending">Pending</option>
                         <option value="confirmed">Confirmed</option>
-                        <option value="pending">Pending</option>
+                         <option value ="completed">Completed</option>
+                       
                         <option value="cancelled">Cancelled</option>
                       </select>
                       <button
