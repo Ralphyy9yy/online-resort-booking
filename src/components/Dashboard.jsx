@@ -1212,7 +1212,7 @@ const ReportsContent = () => {
       </h2>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+      <div className="grid grid-cols-1  2xl:grid-cols-3  gap-6 mb-10">
         <div className="bg-green-50 p-6 rounded-lg shadow flex flex-col items-center">
           <h3 className="text-lg font-semibold text-green-700 mb-2">Total Bookings</h3>
           <p className="text-4xl font-extrabold text-green-900">
